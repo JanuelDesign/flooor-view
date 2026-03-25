@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free a Quote - Pisos de Lujo</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #c9a962;
+            --accent: #f4f4f4;
+            --text: #333;
+            --light: #ffffff;
+            --shadow: rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--text);
+        }
+
+        /* Header */
+        header {
+            background: var(--primary);
+            color: var(--light);
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 2.0rem;
+            font-weight: 300;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, var(--light), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header p {
+            color: var(--secondary);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        /* Collection Section */
+        .collection {
+            margin-bottom: 4rem;
+            background: var(--light);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px var(--shadow);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .collection-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .collection-title {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .collection-type {
+            display: inline-block;
+            background: var(--secondary);
+            color: var(--primary);
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Grid - 4 productos por fila */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Card */
+        .product-card {
+            background: var(--light);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px var(--shadow);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        /* Carrusel Mejorado */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            background: #f5f5f5;
+        }
+
+        .carousel-slides {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Botones del carrusel - Diseño mejorado */
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 300;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover .carousel-btn {
+            opacity: 1;
+        }
+
+        .carousel-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .carousel-btn.prev {
+            left: 12px;
+        }
+
+        .carousel-btn.next {
+            right: 12px;
+        }
+
+        /* Indicadores (dots) mejorados */
+        .carousel-dots {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: scale(1.2);
+        }
+
+        .dot.active {
+            background: var(--secondary);
+            width: 20px;
+            border-radius: 4px;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .product-code {
+            color: var(--secondary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* Specs Toggle */
+        .specs-toggle {
+            background: var(--accent);
+            border: none;
+            width: 100%;
+            padding: 0.7rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            font-family: 'Lato', sans-serif;
+        }
+
+        .specs-toggle:hover {
+            background: #e0e0e0;
+        }
+
+        .specs-toggle::after {
+            content: '▼';
+            font-size: 0.8rem;
+            transition: transform 0.3s;
+        }
+
+        .specs-toggle.active::after {
+            transform: rotate(180deg);
+        }
+
+        .specs-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            background: #fafafa;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+        }
+
+        .specs-content.show {
+            max-height: 500px;
+        }
+
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75rem;
+            font-family: 'Lato', sans-serif;
+        }
+
+        .specs-table td {
+            padding: 0.5rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .specs-table td:first-child {
+            font-weight: 600;
+            color: var(--primary);
+            width: 45%;
+        }
+
+        .specs-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Estimator Toggle */
+        .estimator-toggle {
+            background: var(--accent);
+            border: none;
+            width: 100%;
+            padding: 0.7rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            font-family: 'Lato', sans-serif;
+        }
+
+        .estimator-toggle:hover {
+            background: #e0e0e0;
+        }
+
+        .estimator-toggle::after {
+            content: '▼';
+            font-size: 0.8rem;
+            transition: transform 0.3s;
+        }
+
+        .estimator-toggle.active::after {
+            transform: rotate(180deg);
+        }
+
+        .estimator-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+        }
+
+        .estimator-content.show {
+            max-height: 650px;
+        }
+
+        /* Estimator Form */
+        .estimator-form {
+            padding: 0.8rem;
+        }
+
+        .estimator-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sqft-calculator {
+            background: var(--light);
+            padding: 0.6rem;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            border: 1px solid #e0e0e0;
+        }
+
+        .sqft-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .sqft-input-group input {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        .sqft-input-group input:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .sqft-input-group label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: -0.3rem;
+        }
+
+        .sqft-result {
+            text-align: center;
+            padding: 0.6rem;
+            background: var(--secondary);
+            color: var(--primary);
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .boxes-result {
+            text-align: center;
+            padding: 0.6rem;
+            background: #e8e8e8;
+            color: var(--primary);
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .form-field {
+            margin-bottom: 0.6rem;
+        }
+
+        .form-field input,
+        .form-field textarea {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.75rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-field input:focus,
+        .form-field textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .form-field textarea {
+            resize: vertical;
+            min-height: 50px;
+        }
+
+        .quote-btn {
+            width: 100%;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            padding: 0.7rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Lato', sans-serif;
+            margin-top: 0.5rem;
+        }
+
+        .quote-btn:hover {
+            background: #2d2d2d;
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .whatsapp-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        footer {
+            background: var(--primary);
+            color: var(--light);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 1400px) {
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.8rem;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+                letter-spacing: 4px;
+            }
+
+            .collection {
+                padding: 1.5rem 1rem;
+            }
+
+            .collection-title {
+                font-size: 1.5rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .carousel-container {
+                height: 200px;
+            }
+            
+            .carousel-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
+                opacity: 0.8;
+            }
+        }
+
+        .product-labels {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 20;
+        }
+
+        .label {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .label-new {
+            background: linear-gradient(135deg, #000000, #363636);
+            color: white;
+        }
+
+        .label-lowstock {
+            background: linear-gradient(135deg, #ff9100, #ff6d00);
+            color: white;
+        }
+
+        .label-coming {
+            background: linear-gradient(135deg, #ffffff, #d8d8d8);
+            color: rgb(0, 0, 0);
+        }
+
+        .product-card {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Free a Quote</h1>
+        <p>Solicita tu cotización sin compromiso</p>
+    </header>
+
+    <div class="container">
+        <!-- PS Collection -->
+        <section class="collection">
+            <div class="collection-header">
+                <h2 class="collection-title">PS Collection</h2>
+                <span class="collection-type">Vinyl Luxury Plank (24.26 sqft/box)</span>
+            </div>
+            <div class="products-grid" id="ps-collection"></div>
+        </section>
+
+        <!-- XL Collection -->
+        <section class="collection">
+            <div class="collection-header">
+                <h2 class="collection-title">XL Collection</h2>
+                <span class="collection-type">Vinyl Luxury Plank (19.90 sqft/box)</span>
+            </div>
+            <div class="products-grid" id="xl-collection"></div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Free a Quote. All rights reserved</p>
+    </footer>
+
+    <script>
+        // Datos de las colecciones
+        const collections = {
+            'ps-collection': {
+                name: 'PS Collection',
+                type: 'Vinyl Luxury Plank',
+                sqftPerBox: 24.26,
+                products: [
+                    { code: '1.2', name: 'Elegant Mist', img1: 'img/vinyl/q48/elegant-mist-foto.webp', img2: 'img/vinyl/q48/elegant-mist-2.png', specs: { 'Wear Layer': '12 Mil 0.3mm', 'Rigid Core': '4mm', 'Padding': '1.5 mm HD EVA PAD', 'Width': '7 inches', 'Length': '48 inches', 'Plank/Box': '9', 'Sqft/Box': '24.26', 'Installation': 'Angle-Angle', 'Application': 'Residential & Commercial' } },
+                    { code: '1.4', name: 'Grateful Pine', img1: 'img/vinyl/q48/grateful-pine-foto.webp', img2: 'img/vinyl/q48/grateful-pine-foto-2.png', specs: { 'Wear Layer': '12 Mil 0.3mm', 'Rigid Core': '4mm', 'Padding': '1.5 mm HD EVA PAD', 'Width': '7 inches', 'Length': '48 inches', 'Plank/Box': '9', 'Sqft/Box': '24.26', 'Installation': 'Angle-Angle', 'Application': 'Residential & Commercial' } },
+                    { code: '1.5', name: 'Vital Oak', img1: 'img/vinyl/q48/vital-oak-foto.webp', img2: 'img/vinyl/q48/vital-oak-2.webp', specs: { 'Wear Layer': '12 Mil 0.3mm', 'Rigid Core': '4mm', 'Padding': '1.5 mm HD EVA PAD', 'Width': '7 inches', 'Length': '48 inches', 'Plank/Box': '9', 'Sqft/Box': '24.26', 'Installation': 'Angle-Angle', 'Application': 'Residential & Commercial' } },
+                    { code: '1.6', name: 'Expressive Brown', img1: 'img/vinyl/q48/expressive-brown-foto.webp', img2: 'img/vinyl/q48/expressive-brown-2.webp', specs: { 'Wear Layer': '12 Mil 0.3mm', 'Rigid Core': '4mm', 'Padding': '1.5 mm HD EVA PAD', 'Width': '7 inches', 'Length': '48 inches', 'Plank/Box': '9', 'Sqft/Box': '24.26', 'Installation': 'Angle-Angle', 'Application': 'Residential & Commercial' } },
+                    { code: '1.7', name: 'Euphoric Cherry', img1: 'img/vinyl/q48/euphoric-cherry-foto.webp', img2: 'img/vinyl/q48/euphoric-cherry-2.webp', specs: { 'Wear Layer': '12 Mil 0.3mm', 'Rigid Core': '4mm', 'Padding': '1.5 mm HD EVA PAD', 'Width': '7 inches', 'Length': '48 inches', 'Plank/Box': '9', 'Sqft/Box': '24.26', 'Installation': 'Angle-Angle', 'Application': 'Residential & Commercial' } },
+                    { code: '1.9', name: 'Urban Walnut', img1: 'img/vinyl/q48/urban-oak-foto.webp', img2: 'img/vinyl/q48/urban-oak-2.webp', labels: ['new', 'coming', 'lowstock'], specs: { 'Wear Layer': '12 Mil 0.3mm', 'Rigid Core': '4mm', 'Padding': '1.5 mm HD EVA PAD', 'Width': '7 inches', 'Length': '48 inches', 'Plank/Box': '9', 'Sqft/Box': '24.26', 'Installation': 'Angle-Angle', 'Application': 'Residential & Commercial' } },
+                    { code: '1.12', name: 'Oregon Vintage', img1: 'img/vinyl/q48/oregon-vintage-foto.webp', img2: 'img/vinyl/q48/oregon-vintage-2.webp', specs: { 'Wear Layer': '12 Mil 0.3mm', 'Rigid Core': '4mm', 'Padding': '1.5 mm HD EVA PAD', 'Width': '7 inches', 'Length': '48 inches', 'Plank/Box': '9', 'Sqft/Box': '24.26', 'Installation': 'Angle-Angle', 'Application': 'Residential & Commercial' } },
+                    { code: '1.13', name: 'Harmony Gray', img1: 'img/vinyl/q48/harmony-gray-foto.webp', img2: 'img/vinyl/q48/harmony-gray-2.webp', specs: { 'Wear Layer': '12 Mil 0.3mm', 'Rigid Core': '4mm', 'Padding': '1.5 mm HD EVA PAD', 'Width': '7 inches', 'Length': '48 inches', 'Plank/Box': '9', 'Sqft/Box': '24.26', 'Installation': 'Angle-Angle', 'Application': 'Residential & Commercial' } }
+                ]
+            },
+            'xl-collection': {
+                name: 'XL Collection',
+                type: 'Vinyl Luxury Plank',
+                sqftPerBox: 19.90,
+                products: [
+                    { code: 'XL-001', name: 'Premium Oak XL', img1: 'img/vinyl/xl/premium-oak-1.webp', img2: 'img/vinyl/xl/premium-oak-2.webp', specs: { 'Wear Layer': '20 Mil 0.5mm', 'Rigid Core': '5.5mm', 'Padding': '2.0 mm HD EVA PAD', 'Width': '9 inches', 'Length': '60 inches', 'Plank/Box': '8', 'Sqft/Box': '19.90', 'Installation': 'Angle-Angle', 'Application': 'Residential & Commercial' } },
+                    { code: 'XL-002', name: 'Royal Walnut XL', img1: 'img/vinyl/xl/royal-walnut-1.webp', img2: 'img/vinyl/xl/royal-walnut-2.webp', specs: { 'Wear Layer': '20 Mil 0.5mm', 'Rigid Core': '5.5mm', 'Padding': '2.0 mm HD EVA PAD', 'Width': '9 inches', 'Length': '60 inches', 'Plank/Box': '8', 'Sqft/Box': '19.90', 'Installation': 'Angle-Angle', 'Application': 'Residential & Commercial' } },
+                    { code: 'XL-003', name: 'Silver Gray XL', img1: 'img/vinyl/xl/silver-gray-1.webp', img2: 'img/vinyl/xl/silver-gray-2.webp', specs: { 'Wear Layer': '20 Mil 0.5mm', 'Rigid Core': '5.5mm', 'Padding': '2.0 mm HD EVA PAD', 'Width': '9 inches', 'Length': '60 inches', 'Plank/Box': '8', 'Sqft/Box': '19.90', 'Installation': 'Angle-Angle', 'Application': 'Residential & Commercial' } },
+                    { code: 'XL-004', name: 'Charcoal Black XL', img1: 'img/vinyl/xl/charcoal-black-1.webp', img2: 'img/vinyl/xl/charcoal-black-2.webp', specs: { 'Wear Layer': '20 Mil 0.5mm', 'Rigid Core': '5.5mm', 'Padding': '2.0 mm HD EVA PAD', 'Width': '9 inches', 'Length': '60 inches', 'Plank/Box': '8', 'Sqft/Box': '19.90', 'Installation': 'Angle-Angle', 'Application': 'Residential & Commercial' } },
+                    { code: 'XL-005', name: 'Natural Hickory XL', img1: 'img/vinyl/xl/natural-hickory-1.webp', img2: 'img/vinyl/xl/natural-hickory-2.webp', specs: { 'Wear Layer': '20 Mil 0.5mm', 'Rigid Core': '5.5mm', 'Padding': '2.0 mm HD EVA PAD', 'Width': '9 inches', 'Length': '60 inches', 'Plank/Box': '8', 'Sqft/Box': '19.90', 'Installation': 'Angle-Angle', 'Application': 'Residential & Commercial' } },
+                    { code: 'XL-006', name: 'Driftwood XL', img1: 'img/vinyl/xl/driftwood-1.webp', img2: 'img/vinyl/xl/driftwood-2.webp', labels: ['new'], specs: { 'Wear Layer': '20 Mil 0.5mm', 'Rigid Core': '5.5mm', 'Padding': '2.0 mm HD EVA PAD', 'Width': '9 inches', 'Length': '60 inches', 'Plank/Box': '8', 'Sqft/Box': '19.90', 'Installation': 'Angle-Angle', 'Application': 'Residential & Commercial' } },
+                    { code: 'XL-007', name: 'Vintage Chestnut XL', img1: 'img/vinyl/xl/vintage-chestnut-1.webp', img2: 'img/vinyl/xl/vintage-chestnut-2.webp', specs: { 'Wear Layer': '20 Mil 0.5mm', 'Rigid Core': '5.5mm', 'Padding': '2.0 mm HD EVA PAD', 'Width': '9 inches', 'Length': '60 inches', 'Plank/Box': '8', 'Sqft/Box': '19.90', 'Installation': 'Angle-Angle', 'Application': 'Residential & Commercial' } },
+                    { code: 'XL-008', name: 'Modern Grey XL', img1: 'img/vinyl/xl/modern-grey-1.webp', img2: 'img/vinyl/xl/modern-grey-2.webp', specs: { 'Wear Layer': '20 Mil 0.5mm', 'Rigid Core': '5.5mm', 'Padding': '2.0 mm HD EVA PAD', 'Width': '9 inches', 'Length': '60 inches', 'Plank/Box': '8', 'Sqft/Box': '19.90', 'Installation': 'Angle-Angle', 'Application': 'Residential & Commercial' } }
+                ]
+            }
+        };
+
+        // Generar HTML de especificaciones
+        function generateSpecsTable(specs) {
+            let html = '<table class="specs-table">';
+            for (const [key, value] of Object.entries(specs)) {
+                html += `<tr><td style="font-weight: 600; color: var(--primary);">${key}</td><td>${value}</td>`;
+            }
+            html += '</table>';
+            return html;
+        }
+
+        // Crear carrusel con diseño mejorado
+        function createCarousel(img1, img2, uniqueId) {
+            return `
+                <div class="carousel-container" id="carousel-${uniqueId}">
+                    <div class="carousel-slides" id="slides-${uniqueId}">
+                        <div class="carousel-slide">
+                            <img src="${img1}" alt="Imagen 1" loading="lazy">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="${img2}" alt="Imagen 2" loading="lazy">
+                        </div>
+                    </div>
+                    <button class="carousel-btn prev" onclick="changeSlide('${uniqueId}', -1)">‹</button>
+                    <button class="carousel-btn next" onclick="changeSlide('${uniqueId}', 1)">›</button>
+                    <div class="carousel-dots" id="dots-${uniqueId}">
+                        <span class="dot active" onclick="goToSlide('${uniqueId}', 0)"></span>
+                        <span class="dot" onclick="goToSlide('${uniqueId}', 1)"></span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Control de carrusel
+        window.changeSlide = function(uniqueId, direction) {
+            const slides = document.getElementById(`slides-${uniqueId}`);
+            const dots = document.querySelectorAll(`#dots-${uniqueId} .dot`);
+            let currentIndex = parseInt(slides.getAttribute('data-index') || '0');
+            const totalSlides = 2;
+            
+            currentIndex = (currentIndex + direction + totalSlides) % totalSlides;
+            slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+            slides.setAttribute('data-index', currentIndex);
+            
+            dots.forEach((dot, i) => {
+                if (i === currentIndex) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        };
+
+        window.goToSlide = function(uniqueId, index) {
+            const slides = document.getElementById(`slides-${uniqueId}`);
+            const dots = document.querySelectorAll(`#dots-${uniqueId} .dot`);
+            
+            slides.style.transform = `translateX(-${index * 100}%)`;
+            slides.setAttribute('data-index', index);
+            
+            dots.forEach((dot, i) => {
+                if (i === index) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        };
+
+        // Toggle especificaciones
+        window.toggleSpecs = function(id) {
+            const content = document.getElementById(`specs-${id}`);
+            const button = document.getElementById(`specs-btn-${id}`);
+            
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                button.classList.remove('active');
+            } else {
+                content.classList.add('show');
+                button.classList.add('active');
+            }
+        };
+
+        // Toggle estimador
+        window.toggleEstimator = function(id) {
+            const content = document.getElementById(`estimator-${id}`);
+            const button = document.getElementById(`estimator-btn-${id}`);
+            
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                button.classList.remove('active');
+            } else {
+                content.classList.add('show');
+                button.classList.add('active');
+            }
+        };
+
+        // Enviar cotización por WhatsApp
+        window.sendQuote = function(productCode, productName, collectionName, collectionType, sqftPerBox, uniqueId) {
+            const lengthInput = document.getElementById(`length-${uniqueId}`);
+            const widthInput = document.getElementById(`width-${uniqueId}`);
+            const nameInput = document.getElementById(`name-${uniqueId}`);
+            const emailInput = document.getElementById(`email-${uniqueId}`);
+            const phoneInput = document.getElementById(`phone-${uniqueId}`);
+            const commentInput = document.getElementById(`comment-${uniqueId}`);
+            
+            const length = parseFloat(lengthInput?.value) || 0;
+            const width = parseFloat(widthInput?.value) || 0;
+            const sqft = length * width;
+            const boxesNeeded = Math.ceil(sqft / sqftPerBox);
+            
+            const name = nameInput?.value.trim() || '';
+            const email = emailInput?.value.trim() || '';
+            const phone = phoneInput?.value.trim() || '';
+            
+            if (!name || !email || !phone) {
+                alert('Por favor complete los campos: Nombre, Correo y Teléfono');
+                return;
+            }
+            
+            if (sqft <= 0) {
+                alert('Por favor ingrese las medidas para calcular los pies cuadrados');
+                return;
+            }
+            
+            const comment = commentInput?.value.trim() || '';
+            const phoneNumber = '1234567890';
+            
+            const message = `*NUEVA COTIZACIÓN - FREE A QUOTE*\n\n` +
+                           `*DATOS DEL PRODUCTO*\n` +
+                           `📦 Colección: ${collectionName}\n` +
+                           `🏷️ Tipo: ${collectionType}\n` +
+                           `🔢 Código: ${productCode}\n` +
+                           `📋 Nombre: ${productName}\n` +
+                           `📐 Medidas: ${length} ft x ${width} ft\n` +
+                           `📏 Total SQFT: ${sqft.toFixed(2)} sqft\n` +
+                           `📦 SQFT por caja: ${sqftPerBox} sqft\n` +
+                           `📦 Cajas necesarias: ${boxesNeeded} cajas\n\n` +
+                           `*DATOS DEL CLIENTE*\n` +
+                           `👤 Nombre: ${name}\n` +
+                           `📧 Correo: ${email}\n` +
+                           `📞 Teléfono: ${phone}\n` +
+                           `💬 Comentario: ${comment || 'Sin comentarios adicionales'}\n\n` +
+                           `*Por favor enviar cotización a la mayor brevedad posible.*`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
+        };
+
+        // Crear card de producto
+        function createProductCard(product, collectionName, collectionType, sqftPerBox) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            
+            const uniqueId = `${product.code.replace(/[^a-zA-Z0-9]/g, '')}-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
+            
+            let labelsHtml = '';
+            if (product.labels && product.labels.length > 0) {
+                labelsHtml = '<div class="product-labels">';
+                product.labels.forEach(label => {
+                    let labelClass = '';
+                    let labelText = '';
+                    switch(label) {
+                        case 'new': labelClass = 'label-new'; labelText = 'New Product'; break;
+                        case 'lowstock': labelClass = 'label-lowstock'; labelText = 'Low Stock'; break;
+                        case 'coming': labelClass = 'label-coming'; labelText = 'Coming Soon'; break;
+                    }
+                    if (labelClass) labelsHtml += `<span class="label ${labelClass}">${labelText}</span>`;
+                });
+                labelsHtml += '</div>';
+            }
+            
+            card.innerHTML = `
+                ${labelsHtml}
+                ${createCarousel(product.img1, product.img2, uniqueId)}
+                <div class="product-info">
+                    <h3 class="product-name">${product.name}</h3>
+                    <span class="product-code">${product.code}</span>
+                    
+                    <button class="specs-toggle" id="specs-btn-${uniqueId}" onclick="toggleSpecs('${uniqueId}')">
+                        Specifications
+                    </button>
+                    <div class="specs-content" id="specs-${uniqueId}">
+                        ${generateSpecsTable(product.specs)}
+                    </div>
+                    
+                    <button class="estimator-toggle" id="estimator-btn-${uniqueId}" onclick="toggleEstimator('${uniqueId}')">
+                        📊 Estimate Your Project
+                    </button>
+                    <div class="estimator-content" id="estimator-${uniqueId}">
+                        <div class="estimator-form">
+                            <div class="estimator-title">📐 CALCULATE MATERIAL</div>
+                            <div class="sqft-calculator">
+                                <div class="sqft-input-group">
+                                    <label>Length (ft)</label>
+                                    <input type="number" id="length-${uniqueId}" placeholder="Ej: 20" step="0.1">
+                                    <label>Width (ft)</label>
+                                    <input type="number" id="width-${uniqueId}" placeholder="Ej: 15" step="0.1">
+                                </div>
+                                <div class="sqft-result" id="result-${uniqueId}">
+                                    SQFT: 0.00 ft²
+                                </div>
+                                <div class="boxes-result" id="boxes-${uniqueId}">
+                                    📦 Boxes needed: 0
+                                </div>
+                            </div>
+                            
+                            <div class="estimator-title">📋 CONTACT INFORMATION</div>
+                            <div class="form-field">
+                                <input type="text" id="name-${uniqueId}" placeholder="Full name *" required>
+                            </div>
+                            <div class="form-field">
+                                <input type="email" id="email-${uniqueId}" placeholder="Email *" required>
+                            </div>
+                            <div class="form-field">
+                                <input type="tel" id="phone-${uniqueId}" placeholder="Phone *" required>
+                            </div>
+                            <div class="form-field">
+                                <textarea id="comment-${uniqueId}" placeholder="Additional comments (optional)"></textarea>
+                            </div>
+                            
+                            <button class="quote-btn" onclick="sendQuote('${product.code}', '${product.name.replace(/'/g, "\\'")}', '${collectionName}', '${collectionType}', ${sqftPerBox}, '${uniqueId}')">
+                                <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                                </svg>
+                                FREE A QUOTE
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            setTimeout(() => {
+                const slides = document.getElementById(`slides-${uniqueId}`);
+                if (slides) slides.setAttribute('data-index', '0');
+                
+                const lengthInput = document.getElementById(`length-${uniqueId}`);
+                const widthInput = document.getElementById(`width-${uniqueId}`);
+                const resultSpan = document.getElementById(`result-${uniqueId}`);
+                const boxesSpan = document.getElementById(`boxes-${uniqueId}`);
+                
+                if (lengthInput && widthInput && resultSpan && boxesSpan) {
+                    const updateCalculation = () => {
+                        const length = parseFloat(lengthInput.value) || 0;
+                        const width = parseFloat(widthInput.value) || 0;
+                        const sqft = length * width;
+                        const boxes = Math.ceil(sqft / sqftPerBox);
+                        resultSpan.innerHTML = `SQFT: ${sqft.toFixed(2)} ft²`;
+                        boxesSpan.innerHTML = `📦 Boxes needed: ${boxes}`;
+                    };
+                    
+                    lengthInput.addEventListener('input', updateCalculation);
+                    widthInput.addEventListener('input', updateCalculation);
+                }
+            }, 0);
+            
+            return card;
+        }
+
+        // Renderizar colecciones
+        function renderCollections() {
+            for (const [id, data] of Object.entries(collections)) {
+                const container = document.getElementById(id);
+                if (container) {
+                    container.innerHTML = '';
+                    data.products.forEach(product => {
+                        container.appendChild(createProductCard(product, data.name, data.type, data.sqftPerBox));
+                    });
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', renderCollections);
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free a Quote - Pisos de Lujo</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #c9a962;
+            --accent: #f4f4f4;
+            --text: #333;
+            --light: #ffffff;
+            --shadow: rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--text);
+        }
+
+        /* Header */
+        header {
+            background: var(--primary);
+            color: var(--light);
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 2.0rem;
+            font-weight: 300;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, var(--light), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header p {
+            color: var(--secondary);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        /* Collection Section */
+        .collection {
+            margin-bottom: 4rem;
+            background: var(--light);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px var(--shadow);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .collection-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .collection-title {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .collection-type {
+            display: inline-block;
+            background: var(--secondary);
+            color: var(--primary);
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Card */
+        .product-card {
+            background: var(--light);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px var(--shadow);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            border: 1px solid #e0e0e0;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .product-code {
+            color: var(--secondary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* Specs Toggle */
+        .specs-toggle {
+            background: var(--accent);
+            border: none;
+            width: 100%;
+            padding: 0.8rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-family: 'Lato', sans-serif;
+        }
+
+        .specs-toggle:hover {
+            background: #e0e0e0;
+        }
+
+        .specs-toggle::after {
+            content: '▼';
+            font-size: 0.9rem;
+            transition: transform 0.3s;
+        }
+
+        .specs-toggle.active::after {
+            transform: rotate(180deg);
+        }
+
+        .specs-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            background: #fafafa;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .specs-content.show {
+            max-height: 500px;
+        }
+
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            font-family: 'Lato', sans-serif;
+        }
+
+        .specs-table td {
+            padding: 0.6rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .specs-table td:first-child {
+            font-weight: 600;
+            color: var(--primary);
+            width: 40%;
+            font-family: 'Lato', sans-serif;
+        }
+
+        .specs-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Estimator Form */
+        .estimator-form {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px solid #e0e0e0;
+        }
+
+        .estimator-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sqft-calculator {
+            background: var(--light);
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #e0e0e0;
+        }
+
+        .sqft-input-group {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .sqft-input-group input {
+            flex: 1;
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.85rem;
+        }
+
+        .sqft-result {
+            text-align: center;
+            padding: 0.6rem;
+            background: var(--secondary);
+            color: var(--primary);
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .form-field {
+            margin-bottom: 0.8rem;
+        }
+
+        .form-field input,
+        .form-field textarea {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.85rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-field input:focus,
+        .form-field textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .form-field textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        /* Quote Button */
+        .quote-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            border: none;
+            padding: 0.9rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Lato', sans-serif;
+            margin-top: 0.5rem;
+        }
+
+        .quote-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+        }
+
+        .whatsapp-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: var(--light);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+                letter-spacing: 4px;
+            }
+
+            .collection {
+                padding: 1.5rem 1rem;
+            }
+
+            .collection-title {
+                font-size: 1.5rem;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-image {
+                height: 200px;
+            }
+        }
+
+        /* Labels/Badges */
+        .product-labels {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .label {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .label-new {
+            background: linear-gradient(135deg, #000000, #363636);
+            color: white;
+        }
+
+        .label-lowstock {
+            background: linear-gradient(135deg, #ff9100, #ff6d00);
+            color: white;
+        }
+
+        .label-coming {
+            background: linear-gradient(135deg, #ffffff, #d8d8d8);
+            color: rgb(0, 0, 0);
+        }
+
+        .product-card {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Free a Quote</h1>
+        <p>Solicita tu cotización sin compromiso</p>
+    </header>
+
+    <div class="container">
+        <!-- PS Collection -->
+        <section class="collection">
+            <div class="collection-header">
+                <h2 class="collection-title">PS Collection</h2>
+                <span class="collection-type">Vinyl Luxury Plank</span>
+            </div>
+            <div class="products-grid" id="ps-collection"></div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Free a Quote. All rights reserved</p>
+    </footer>
+
+    <script>
+        // Datos de las colecciones
+        const collections = {
+            'ps-collection': {
+                name: 'PS Collection',
+                type: 'Vinyl Luxury Plank',
+                products: [
+                    { code: '1.2', name: 'Elegant Mist', img: 'img/vinyl/q48/elegant-mist-foto.webp', specs: { 'Wear Layer': '12 Mil 0.3mm', 'Rigid Core': '4mm', 'Padding': '1.5 mm HD EVA PAD', 'Ancho': '7 inches', 'Largo': '48 inches', 'Plank/Box': '9', 'Sqft/Box': '24.26', 'Installation': 'Angle-Angle', 'Aplication': 'Residential & Commercial' } },
+                    { code: '1.4', name: 'Grateful Pine', img: 'img/vinyl/q48/grateful-pine-foto.webp', specs: { 'Wear Layer': '12 Mil 0.3mm', 'Rigid Core': '4mm', 'Padding': '1.5 mm HD EVA PAD', 'Ancho': '7 inches', 'Largo': '48 inches', 'Plank/Box': '9', 'Sqft/Box': '24.26', 'Installation': 'Angle-Angle', 'Aplication': 'Residential & Commercial' } },
+                    { code: '1.5', name: 'Vital Oak', img: 'img/vinyl/q48/vital-oak-foto.webp', specs: { 'Wear Layer': '12 Mil 0.3mm', 'Rigid Core': '4mm', 'Padding': '1.5 mm HD EVA PAD', 'Ancho': '7 inches', 'Largo': '48 inches', 'Plank/Box': '9', 'Sqft/Box': '24.26', 'Installation': 'Angle-Angle', 'Aplication': 'Residential & Commercial' } },
+                    { code: '1.6', name: 'Expressive Brown', img: 'img/vinyl/q48/expressive-brown-foto.webp', specs: { 'Wear Layer': '12 Mil 0.3mm', 'Rigid Core': '4mm', 'Padding': '1.5 mm HD EVA PAD', 'Ancho': '7 inches', 'Largo': '48 inches', 'Plank/Box': '9', 'Sqft/Box': '24.26', 'Installation': 'Angle-Angle', 'Aplication': 'Residential & Commercial' } },
+                    { code: '1.7', name: 'Euphoric Cherry', img: 'img/vinyl/q48/euphoric-cherry-foto.webp', specs: { 'Wear Layer': '12 Mil 0.3mm', 'Rigid Core': '4mm', 'Padding': '1.5 mm HD EVA PAD', 'Ancho': '7 inches', 'Largo': '48 inches', 'Plank/Box': '9', 'Sqft/Box': '24.26', 'Installation': 'Angle-Angle', 'Aplication': 'Residential & Commercial' } },
+                    { code: '1.9', name: 'Urban Walnut', img: 'img/vinyl/q48/urban-oak-foto.webp', labels: ['new', 'coming', 'lowstock'], specs: { 'Wear Layer': '12 Mil 0.3mm', 'Rigid Core': '4mm', 'Padding': '1.5 mm HD EVA PAD', 'Ancho': '7 inches', 'Largo': '48 inches', 'Plank/Box': '9', 'Sqft/Box': '24.26', 'Installation': 'Angle-Angle', 'Aplication': 'Residential & Commercial' } },
+                    { code: '1.12', name: 'Oregon Vintage', img: 'img/vinyl/q48/oregon-vintage-foto.webp', specs: { 'Wear Layer': '12 Mil 0.3mm', 'Rigid Core': '4mm', 'Padding': '1.5 mm HD EVA PAD', 'Ancho': '7 inches', 'Largo': '48 inches', 'Plank/Box': '9', 'Sqft/Box': '24.26', 'Installation': 'Angle-Angle', 'Aplication': 'Residential & Commercial' } },
+                    { code: '1.13', name: 'Harmony Gray', img: 'img/vinyl/q48/harmony-gray-foto.webp', specs: { 'Wear Layer': '12 Mil 0.3mm', 'Rigid Core': '4mm', 'Padding': '1.5 mm HD EVA PAD', 'Ancho': '7 inches', 'Largo': '48 inches', 'Plank/Box': '9', 'Sqft/Box': '24.26', 'Installation': 'Angle-Angle', 'Aplication': 'Residential & Commercial' } }
+                ]
+            }
+        };
+
+        // Generar HTML de especificaciones
+        function generateSpecsTable(specs) {
+            let html = '<table class="specs-table">';
+            for (const [key, value] of Object.entries(specs)) {
+                html += `<tr><td>${key}</td><td>${value}</td></tr>`;
+            }
+            html += '</table>';
+            return html;
+        }
+
+        // Calcular SQFT
+        function calculateSQFT(lengthInput, widthInput, resultSpan) {
+            const length = parseFloat(lengthInput.value) || 0;
+            const width = parseFloat(widthInput.value) || 0;
+            const sqft = length * width;
+            resultSpan.textContent = sqft.toFixed(2);
+            return sqft;
+        }
+
+        // Enviar cotización por WhatsApp
+        window.sendQuote = function(productCode, productName, collectionName, collectionType, uniqueId) {
+            // Obtener valores del formulario
+            const lengthInput = document.getElementById(`length-${uniqueId}`);
+            const widthInput = document.getElementById(`width-${uniqueId}`);
+            const nameInput = document.getElementById(`name-${uniqueId}`);
+            const emailInput = document.getElementById(`email-${uniqueId}`);
+            const phoneInput = document.getElementById(`phone-${uniqueId}`);
+            const commentInput = document.getElementById(`comment-${uniqueId}`);
+            
+            // Calcular SQFT
+            const length = parseFloat(lengthInput?.value) || 0;
+            const width = parseFloat(widthInput?.value) || 0;
+            const sqft = length * width;
+            
+            // Validar campos requeridos
+            const name = nameInput?.value.trim() || '';
+            const email = emailInput?.value.trim() || '';
+            const phone = phoneInput?.value.trim() || '';
+            
+            if (!name || !email || !phone) {
+                alert('Por favor complete los campos: Nombre, Correo y Teléfono');
+                return;
+            }
+            
+            if (sqft <= 0) {
+                alert('Por favor ingrese las medidas para calcular los pies cuadrados');
+                return;
+            }
+            
+            const comment = commentInput?.value.trim() || '';
+            
+            // Número de WhatsApp (cambiar según necesidad)
+            const phoneNumber = '1234567890';
+            
+            // Crear mensaje
+            const message = `*NUEVA COTIZACIÓN - FREE A QUOTE*\n\n` +
+                           `*DATOS DEL PRODUCTO*\n` +
+                           `📦 Colección: ${collectionName}\n` +
+                           `🏷️ Tipo: ${collectionType}\n` +
+                           `🔢 Código: ${productCode}\n` +
+                           `📋 Nombre: ${productName}\n` +
+                           `📐 Medidas: ${length} ft x ${width} ft\n` +
+                           `📏 Total SQFT: ${sqft.toFixed(2)} sqft\n\n` +
+                           `*DATOS DEL CLIENTE*\n` +
+                           `👤 Nombre: ${name}\n` +
+                           `📧 Correo: ${email}\n` +
+                           `📞 Teléfono: ${phone}\n` +
+                           `💬 Comentario: ${comment || 'Sin comentarios adicionales'}\n\n` +
+                           `*Por favor enviar cotización a la mayor brevedad posible.*`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
+        };
+
+        // Toggle especificaciones
+        window.toggleSpecs = function(id) {
+            const content = document.getElementById(`specs-${id}`);
+            const button = content.previousElementSibling;
+            
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                button.classList.remove('active');
+            } else {
+                document.querySelectorAll('.specs-content.show').forEach(el => {
+                    el.classList.remove('show');
+                    el.previousElementSibling.classList.remove('active');
+                });
+                
+                content.classList.add('show');
+                button.classList.add('active');
+            }
+        };
+
+        // Crear card de producto con estimador
+        function createProductCard(product, collectionName, collectionType) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            
+            const uniqueId = `${product.code.replace(/[^a-zA-Z0-9]/g, '')}-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
+            
+            // Generar labels si existen
+            let labelsHtml = '';
+            if (product.labels && product.labels.length > 0) {
+                labelsHtml = '<div class="product-labels">';
+                product.labels.forEach(label => {
+                    let labelClass = '';
+                    let labelText = '';
+                    
+                    switch(label) {
+                        case 'new':
+                            labelClass = 'label-new';
+                            labelText = 'New Product';
+                            break;
+                        case 'lowstock':
+                            labelClass = 'label-lowstock';
+                            labelText = 'Low Stock';
+                            break;
+                        case 'coming':
+                            labelClass = 'label-coming';
+                            labelText = 'Coming Soon';
+                            break;
+                    }
+                    
+                    if (labelClass) {
+                        labelsHtml += `<span class="label ${labelClass}">${labelText}</span>`;
+                    }
+                });
+                labelsHtml += '</div>';
+            }
+            
+            card.innerHTML = `
+                ${labelsHtml}
+                <img src="${product.img}" alt="${product.name}" class="product-image" loading="lazy">
+                <div class="product-info">
+                    <h3 class="product-name">${product.name}</h3>
+                    <span class="product-code">${product.code}</span>
+                    
+                    <button class="specs-toggle" onclick="toggleSpecs('${uniqueId}')">
+                        Specifications
+                    </button>
+                    
+                    <div class="specs-content" id="specs-${uniqueId}">
+                        ${generateSpecsTable(product.specs)}
+                    </div>
+                    
+                    <div class="estimator-form">
+                        <div class="estimator-title">📐 ESTIMADOR DE MATERIAL</div>
+                        
+                        <div class="sqft-calculator">
+                            <div class="sqft-input-group">
+                                <input type="number" id="length-${uniqueId}" placeholder="Largo (ft)" step="0.1">
+                                <input type="number" id="width-${uniqueId}" placeholder="Ancho (ft)" step="0.1">
+                            </div>
+                            <div class="sqft-result" id="result-${uniqueId}">
+                                SQFT Estimado: 0.00 ft²
+                            </div>
+                        </div>
+                        
+                        <div class="form-field">
+                            <input type="text" id="name-${uniqueId}" placeholder="Nombre completo *" required>
+                        </div>
+                        <div class="form-field">
+                            <input type="email" id="email-${uniqueId}" placeholder="Correo electrónico *" required>
+                        </div>
+                        <div class="form-field">
+                            <input type="tel" id="phone-${uniqueId}" placeholder="Teléfono *" required>
+                        </div>
+                        <div class="form-field">
+                            <textarea id="comment-${uniqueId}" placeholder="Comentario adicional (opcional)"></textarea>
+                        </div>
+                        
+                        <button class="quote-btn" onclick="sendQuote('${product.code}', '${product.name.replace(/'/g, "\\'")}', '${collectionName}', '${collectionType}', '${uniqueId}')">
+                            <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                            </svg>
+                            FREE A QUOTE
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Agregar evento para calcular SQFT en tiempo real
+            setTimeout(() => {
+                const lengthInput = document.getElementById(`length-${uniqueId}`);
+                const widthInput = document.getElementById(`width-${uniqueId}`);
+                const resultSpan = document.getElementById(`result-${uniqueId}`);
+                
+                if (lengthInput && widthInput && resultSpan) {
+                    const updateSQFT = () => {
+                        const length = parseFloat(lengthInput.value) || 0;
+                        const width = parseFloat(widthInput.value) || 0;
+                        const sqft = length * width;
+                        resultSpan.innerHTML = `SQFT Estimado: ${sqft.toFixed(2)} ft²`;
+                    };
+                    
+                    lengthInput.addEventListener('input', updateSQFT);
+                    widthInput.addEventListener('input', updateSQFT);
+                }
+            }, 0);
+            
+            return card;
+        }
+
+        // Renderizar colecciones
+        function renderCollections() {
+            for (const [id, data] of Object.entries(collections)) {
+                const container = document.getElementById(id);
+                if (container) {
+                    container.innerHTML = '';
+                    data.products.forEach(product => {
+                        container.appendChild(createProductCard(product, data.name, data.type));
+                    });
+                }
+            }
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', renderCollections);
+    </script>
+
+</body>
+</html>
